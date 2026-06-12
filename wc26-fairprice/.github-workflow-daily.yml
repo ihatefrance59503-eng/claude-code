@@ -1,0 +1,29 @@
+# Copy this file to .github/workflows/daily.yml in your own repository to get
+# a daily refresh + matchday pricing pushed to Telegram before kickoff.
+name: wc26 daily refresh
+on:
+  schedule:
+    - cron: "0 13 * * *"   # 13:00 UTC — before NA kickoffs
+  workflow_dispatch: {}
+
+jobs:
+  matchday:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r wc26-fairprice/requirements.txt
+      - name: refresh data + retrain + evaluate
+        working-directory: wc26-fairprice
+        run: |
+          python -m wc26fp.cli refresh
+          python -m wc26fp.cli train
+          python -m wc26fp.cli evaluate || true   # FAIL verdict is not an error
+      - name: price today and push to Telegram
+        working-directory: wc26-fairprice
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -c "from wc26fp.bot import push_daily_flags; push_daily_flags()"

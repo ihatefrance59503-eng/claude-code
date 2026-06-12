@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ team.name if team else "Team" }} — WC2026{% endblock %}
+{% block content %}
+
+{% if error %}
+<div class="error-box">{{ error }}</div>
+{% else %}
+
+<div class="page-header">
+  <h1>{{ team.name }}</h1>
+  <p class="subtitle">Group {{ group }} &bull; FIFA Ranking #{{ team.fifa_ranking }}</p>
+</div>
+
+<div class="team-overview">
+  <div class="overview-grid">
+    <div class="stat-box">
+      <div class="stat-num">{{ team.goals_per_game }}</div>
+      <div class="stat-name">Goals / game</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{{ team.goals_conceded_per_game }}</div>
+      <div class="stat-name">Conceded / game</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{{ team.xg_per_game }}</div>
+      <div class="stat-name">xG / game</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{{ team.shots_on_target_per_game }}</div>
+      <div class="stat-name">Shots on target / g</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{{ team.fouls_per_game }}</div>
+      <div class="stat-name">Fouls / game</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{{ team.yellow_cards_per_game }}</div>
+      <div class="stat-name">Yellow cards / g</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{{ team.possession }}%</div>
+      <div class="stat-name">Possession</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{{ team.form }}</div>
+      <div class="stat-name">Recent form</div>
+    </div>
+  </div>
+
+  {% if team.key_players %}
+  <div class="key-players-section">
+    <h3>Key Players</h3>
+    <div class="player-chips">
+      {% for player in team.key_players %}
+      <span class="player-chip">{{ player }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<h2>Group {{ group }} Match Predictions</h2>
+<div class="fixtures-grid">
+  {% for pred in match_preds %}
+  <div class="fixture-card">
+    <div class="fixture-teams">
+      <span class="team home">{{ pred.home }}</span>
+      <span class="vs">VS</span>
+      <span class="team away">{{ pred.away }}</span>
+    </div>
+    <div class="prob-bars">
+      <div class="prob-row">
+        <span class="prob-label">{{ pred.home }}</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home-bar" style="width:{{ (pred.home_win_prob*100)|round|int }}%"></div>
+        </div>
+        <span class="prob-pct">{{ (pred.home_win_prob*100)|round(1) }}%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw-bar" style="width:{{ (pred.draw_prob*100)|round|int }}%"></div>
+        </div>
+        <span class="prob-pct">{{ (pred.draw_prob*100)|round(1) }}%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">{{ pred.away }}</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away-bar" style="width:{{ (pred.away_win_prob*100)|round|int }}%"></div>
+        </div>
+        <span class="prob-pct">{{ (pred.away_win_prob*100)|round(1) }}%</span>
+      </div>
+    </div>
+    {% if pred.top_picks %}
+    <div class="top-picks">
+      {% for pick in pred.top_picks %}
+      <div class="pick-chip confidence-{{ pick.confidence|lower }}">
+        {{ pick.bet }} {{ pick.prob_pct }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <a class="detail-link" href="/match?home={{ pred.home }}&away={{ pred.away }}">Full Analysis &rarr;</a>
+  </div>
+  {% endfor %}
+</div>
+
+{% endif %}
+{% endblock %}

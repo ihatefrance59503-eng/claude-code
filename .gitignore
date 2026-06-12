@@ -1,2 +1,9 @@
 .DS_Store
 
+football_betting/__pycache__/
+football_betting/data/*.json
+wc26-fairprice/data/cache/
+wc26-fairprice/data/*.pkl
+wc26-fairprice/data/verdict.txt
+wc26-fairprice/data/bets.csv
+wc26-fairprice/**/__pycache__/

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}WC2026 Tips — Upcoming Fixtures{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>World Cup 2026 &mdash; Betting Predictions</h1>
+  <p class="subtitle">Logistic regression model trained on international team stats, xG, form, and head-to-head records</p>
+</div>
+
+{% if predictions %}
+<div class="accuracy-banner">
+  <strong>Model cross-validation accuracy</strong> &mdash;
+  trained on <strong>{{ predictions[0].training_samples | default('15,000+') }}</strong> matches
+  (real WC/Euro/Copa records + simulated):
+  {% set acc = predictions[0].model_accuracies %}
+  {% if acc %}
+    Result: <span class="acc-chip">{{ acc['Match Result'] }}%</span>
+    Goals: <span class="acc-chip">{{ acc['Over 2.5 Goals'] }}%</span>
+    BTTS: <span class="acc-chip">{{ acc['BTTS'] }}%</span>
+    Fouls: <span class="acc-chip">{{ acc['Fouls'] }}%</span>
+    Cards: <span class="acc-chip">{{ acc['Cards'] }}%</span>
+  {% endif %}
+</div>
+{% endif %}
+
+<section class="fixtures-section">
+  <h2>Upcoming Group Stage Fixtures</h2>
+  <div class="fixtures-grid">
+    {% for p in predictions %}
+    <div class="fixture-card">
+      <div class="fixture-header">
+        <span class="group-badge">Group {{ p.group }}</span>
+        <span class="fixture-date">{{ p.date }}</span>
+      </div>
+      <div class="fixture-teams">
+        <span class="team home">{{ p.home }}</span>
+        <span class="vs">VS</span>
+        <span class="team away">{{ p.away }}</span>
+      </div>
+      <div class="fixture-venue">{{ p.venue }}</div>
+
+      <!-- Probability bars -->
+      <div class="prob-bars">
+        <div class="prob-row">
+          <span class="prob-label">{{ p.home }} Win</span>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar home-bar" style="width:{{ (p.home_win_prob * 100)|round|int }}%"></div>
+          </div>
+          <span class="prob-pct">{{ (p.home_win_prob * 100)|round(1) }}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">Draw</span>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar draw-bar" style="width:{{ (p.draw_prob * 100)|round|int }}%"></div>
+          </div>
+          <span class="prob-pct">{{ (p.draw_prob * 100)|round(1) }}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">{{ p.away }} Win</span>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar away-bar" style="width:{{ (p.away_win_prob * 100)|round|int }}%"></div>
+          </div>
+          <span class="prob-pct">{{ (p.away_win_prob * 100)|round(1) }}%</span>
+        </div>
+      </div>
+
+      <!-- Top picks -->
+      {% if p.top_picks %}
+      <div class="top-picks">
+        <strong>Top Picks:</strong>
+        {% for pick in p.top_picks %}
+        <div class="pick-chip confidence-{{ pick.confidence|lower }}">
+          {{ pick.bet }} &mdash; {{ pick.prob_pct }}
+          <span class="conf-badge">{{ pick.confidence }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="stats-row">
+        <span>xG: <strong>{{ p.expected_goals }}</strong></span>
+        <span>Fouls: <strong>{{ p.expected_fouls }}</strong></span>
+        <span>Goals: <strong>{{ p.goals_bet }}</strong></span>
+      </div>
+
+      <a class="detail-link" href="/match?home={{ p.home }}&away={{ p.away }}">Full Analysis &rarr;</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="groups-section">
+  <h2>Group Overview</h2>
+  <div class="groups-grid">
+    {% for group, teams in groups.items() %}
+    <div class="group-card">
+      <h3>Group {{ group }}</h3>
+      <ul>
+        {% for team in teams %}
+        <li><a href="/team/{{ team }}">{{ team }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}
