@@ -1,6 +1,29 @@
 # Claude Code — Project Memory
 
-## Active Project: World Cup 2026 Football Betting Assistant
+## Active Project: wc26-fairprice (supersedes /football_betting/)
+
+Located in `/wc26-fairprice/`. A fair-price engine for WC2026 with hard
+integrity gates — never a tip machine.
+
+### Core rules
+- **Logistic regression is the interpretable spine**; the user explicitly
+  authorized a calibrated ensemble around it (LightGBM on identical
+  features + Dixon-Coles bivariate Poisson for goals markets).
+- **Integrity gates are non-negotiable**: the value engine stays in
+  NO-BET mode unless `evaluate` proves the ensemble beats the de-vigged
+  market (paired bootstrap p<0.05) on held-out data. Never soften these.
+- Time-based splits only (train ≤2021, val 2022–24, test 2025→); the
+  leakage unit test must keep passing.
+- Real data: martj42 international results (49k matches, includes live
+  WC26 calendar) + FIFA rankings, both via GitHub raw (other hosts are
+  blocked by this environment's network policy).
+- "No bet" is a successful output — keep the README note verbatim.
+
+### Commands
+`python -m wc26fp.cli` → refresh / train / evaluate / predict / value /
+backtest / clv / wc26 today / wc26 match / dashboard / bot. Tests: `pytest tests/`.
+
+## Legacy Project: Football Betting Assistant (prototype)
 
 Located in `/football_betting/`.
 
