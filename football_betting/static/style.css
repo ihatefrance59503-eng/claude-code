@@ -395,10 +395,71 @@ footer {
   margin-bottom: 1rem;
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  nav { padding: 0 1rem; }
-  main { padding: 1rem; }
-  .match-form { flex-direction: column; }
+/* Accuracy banner */
+.accuracy-banner {
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  border-radius: 8px;
+  padding: 0.8rem 1.2rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.accuracy-banner strong { color: var(--text); }
+.acc-chip {
+  background: rgba(0,176,79,0.15);
+  color: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin: 0 2px;
+}
+
+/* Mobile — full responsive overhaul */
+@media (max-width: 768px) {
+  nav { padding: 0 0.8rem; }
+  .nav-brand { font-size: 0.95rem; }
+  .nav-links a { margin-left: 0.8rem; font-size: 0.8rem; }
+  main { padding: 0.8rem; }
+  .page-header h1 { font-size: 1.3rem; }
+
+  .fixtures-grid { grid-template-columns: 1fr; }
+  .analysis-grid { grid-template-columns: 1fr; }
+  .groups-grid { grid-template-columns: repeat(3, 1fr); }
+  .team-cards-row { grid-template-columns: repeat(2, 1fr); }
+  .overview-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .match-form { flex-direction: column; align-items: stretch; }
   .match-form select { min-width: unset; width: 100%; }
+  .match-form button { width: 100%; padding: 0.7rem; font-size: 1rem; }
+  .vs-form { text-align: center; }
+
+  .stats-table th, .stats-table td { padding: 0.5rem 0.4rem; font-size: 0.78rem; }
+
+  .match-title { font-size: 1.1rem; }
+  .team-big { font-size: 1.1rem; }
+
+  .prob-label { width: 70px; font-size: 0.75rem; }
+  .prob-pct { font-size: 0.75rem; }
+
+  .accuracy-banner { font-size: 0.78rem; }
+  .acc-chip { display: inline-block; margin: 2px; }
+
+  .pick-row { flex-wrap: wrap; gap: 0.4rem; }
+  .prob-tag { margin-left: 0; }
+
+  /* Touch-friendly tap targets */
+  .detail-link { padding: 0.5rem; }
+  .team-card { min-height: 110px; }
+  .group-card li { padding: 4px 0; }
+}
+
+@media (max-width: 400px) {
+  .groups-grid { grid-template-columns: repeat(2, 1fr); }
+  .overview-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links { display: none; }  /* hamburger-less fallback: links in footer */
 }

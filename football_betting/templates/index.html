@@ -7,6 +7,22 @@
   <p class="subtitle">Logistic regression model trained on international team stats, xG, form, and head-to-head records</p>
 </div>
 
+{% if predictions %}
+<div class="accuracy-banner">
+  <strong>Model cross-validation accuracy</strong> &mdash;
+  trained on <strong>{{ predictions[0].training_samples | default('15,000+') }}</strong> matches
+  (real WC/Euro/Copa records + simulated):
+  {% set acc = predictions[0].model_accuracies %}
+  {% if acc %}
+    Result: <span class="acc-chip">{{ acc['Match Result'] }}%</span>
+    Goals: <span class="acc-chip">{{ acc['Over 2.5 Goals'] }}%</span>
+    BTTS: <span class="acc-chip">{{ acc['BTTS'] }}%</span>
+    Fouls: <span class="acc-chip">{{ acc['Fouls'] }}%</span>
+    Cards: <span class="acc-chip">{{ acc['Cards'] }}%</span>
+  {% endif %}
+</div>
+{% endif %}
+
 <section class="fixtures-section">
   <h2>Upcoming Group Stage Fixtures</h2>
   <div class="fixtures-grid">

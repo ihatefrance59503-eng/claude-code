@@ -74,4 +74,6 @@ def api_predict():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Bind to all interfaces so phones on the same network can connect,
+    # or so a cloudflared tunnel can reach it.
+    app.run(host="0.0.0.0", debug=False, port=5000)
