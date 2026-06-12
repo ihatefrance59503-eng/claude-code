@@ -1,2 +1,4 @@
 .DS_Store
 
+football_betting/__pycache__/
+football_betting/data/*.json

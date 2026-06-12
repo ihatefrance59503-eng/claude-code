@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if pred %}{{ pred.home }} vs {{ pred.away }} Analysis{% else %}Custom Match{% endif %}
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>Match Predictor</h1>
+</div>
+
+<!-- Team selector form -->
+<form class="match-form" method="get" action="/match">
+  <select name="home" required>
+    <option value="">Select Home Team</option>
+    {% for team in all_teams %}
+    <option value="{{ team }}" {% if pred and pred.home == team %}selected{% endif %}>{{ team }}</option>
+    {% endfor %}
+  </select>
+  <span class="vs-form">VS</span>
+  <select name="away" required>
+    <option value="">Select Away Team</option>
+    {% for team in all_teams %}
+    <option value="{{ team }}" {% if pred and pred.away == team %}selected{% endif %}>{{ team }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Analyse</button>
+</form>
+
+{% if error %}
+<div class="error-box">{{ error }}</div>
+{% endif %}
+
+{% if pred %}
+<div class="match-analysis">
+  <div class="match-title">
+    <span class="team-big">{{ pred.home }}</span>
+    <span class="vs-big">vs</span>
+    <span class="team-big">{{ pred.away }}</span>
+  </div>
+
+  <!-- Result probabilities -->
+  <div class="analysis-grid">
+    <div class="analysis-card">
+      <h3>Match Result (1X2)</h3>
+      <div class="prob-bars">
+        <div class="prob-row">
+          <span class="prob-label">{{ pred.home }}</span>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar home-bar" style="width:{{ (pred.home_win_prob*100)|round|int }}%"></div>
+          </div>
+          <span class="prob-pct">{{ (pred.home_win_prob*100)|round(1) }}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">Draw</span>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar draw-bar" style="width:{{ (pred.draw_prob*100)|round|int }}%"></div>
+          </div>
+          <span class="prob-pct">{{ (pred.draw_prob*100)|round(1) }}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">{{ pred.away }}</span>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar away-bar" style="width:{{ (pred.away_win_prob*100)|round|int }}%"></div>
+          </div>
+          <span class="prob-pct">{{ (pred.away_win_prob*100)|round(1) }}%</span>
+        </div>
+      </div>
+      <div class="best-bet">Best bet: <strong>{{ pred.best_result_bet }}</strong>
+        <span class="conf-badge confidence-{{ pred.result_confidence|lower }}">{{ pred.result_confidence }}</span>
+      </div>
+    </div>
+
+    <div class="analysis-card">
+      <h3>Goals Market</h3>
+      <div class="market-row">
+        <span>Over 2.5</span>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar" style="width:{{ (pred.over25_prob*100)|round|int }}%"></div>
+        </div>
+        <span>{{ (pred.over25_prob*100)|round(1) }}%</span>
+      </div>
+      <div class="market-row">
+        <span>Under 2.5</span>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar under-bar" style="width:{{ (pred.under25_prob*100)|round|int }}%"></div>
+        </div>
+        <span>{{ (pred.under25_prob*100)|round(1) }}%</span>
+      </div>
+      <p>Expected goals: <strong>{{ pred.expected_goals }}</strong></p>
+      <div class="best-bet">Best bet: <strong>{{ pred.goals_bet }}</strong>
+        <span class="conf-badge confidence-{{ pred.goals_confidence|lower }}">{{ pred.goals_confidence }}</span>
+      </div>
+    </div>
+
+    <div class="analysis-card">
+      <h3>Both Teams To Score</h3>
+      <div class="market-row">
+        <span>BTTS Yes</span>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar" style="width:{{ (pred.btts_yes_prob*100)|round|int }}%"></div>
+        </div>
+        <span>{{ (pred.btts_yes_prob*100)|round(1) }}%</span>
+      </div>
+      <div class="market-row">
+        <span>BTTS No</span>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar under-bar" style="width:{{ (pred.btts_no_prob*100)|round|int }}%"></div>
+        </div>
+        <span>{{ (pred.btts_no_prob*100)|round(1) }}%</span>
+      </div>
+      <div class="best-bet">Best bet: <strong>{{ pred.btts_bet }}</strong>
+        <span class="conf-badge confidence-{{ pred.btts_confidence|lower }}">{{ pred.btts_confidence }}</span>
+      </div>
+    </div>
+
+    <div class="analysis-card">
+      <h3>Fouls Market</h3>
+      <div class="market-row">
+        <span>Over 25.5</span>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar" style="width:{{ (pred.fouls_over_prob*100)|round|int }}%"></div>
+        </div>
+        <span>{{ (pred.fouls_over_prob*100)|round(1) }}%</span>
+      </div>
+      <p>Expected fouls: <strong>{{ pred.expected_fouls }}</strong></p>
+      <div class="best-bet">Best bet: <strong>{{ pred.fouls_bet }}</strong>
+        <span class="conf-badge confidence-{{ pred.fouls_confidence|lower }}">{{ pred.fouls_confidence }}</span>
+      </div>
+    </div>
+
+    <div class="analysis-card">
+      <h3>Cards Market</h3>
+      <div class="market-row">
+        <span>Over 3.5 cards</span>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar" style="width:{{ (pred.cards_over_prob*100)|round|int }}%"></div>
+        </div>
+        <span>{{ (pred.cards_over_prob*100)|round(1) }}%</span>
+      </div>
+      <div class="best-bet">Best bet: <strong>{{ pred.cards_bet }}</strong>
+        <span class="conf-badge confidence-{{ pred.cards_confidence|lower }}">{{ pred.cards_confidence }}</span>
+      </div>
+    </div>
+
+    <!-- Top Picks Summary -->
+    <div class="analysis-card top-picks-card">
+      <h3>AI Top Picks (55%+ confidence)</h3>
+      {% if pred.top_picks %}
+        {% for pick in pred.top_picks %}
+        <div class="pick-row">
+          <span class="market-tag">{{ pick.market }}</span>
+          <strong>{{ pick.bet }}</strong>
+          <span class="prob-tag">{{ pick.prob_pct }}</span>
+          <span class="conf-badge confidence-{{ pick.confidence|lower }}">{{ pick.confidence }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>No high-confidence picks found for this match.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Team stat comparison -->
+  {% if home_team and away_team %}
+  <div class="stats-comparison">
+    <h3>Team Stats Comparison</h3>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>{{ home_team.name }}</th>
+          <th>Stat</th>
+          <th>{{ away_team.name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="stat-val {% if home_team.goals_per_game > away_team.goals_per_game %}winner{% endif %}">{{ home_team.goals_per_game }}</td>
+          <td>Goals / game</td>
+          <td class="stat-val {% if away_team.goals_per_game > home_team.goals_per_game %}winner{% endif %}">{{ away_team.goals_per_game }}</td>
+        </tr>
+        <tr>
+          <td class="stat-val {% if home_team.goals_conceded_per_game < away_team.goals_conceded_per_game %}winner{% endif %}">{{ home_team.goals_conceded_per_game }}</td>
+          <td>Goals conceded / game</td>
+          <td class="stat-val {% if away_team.goals_conceded_per_game < home_team.goals_conceded_per_game %}winner{% endif %}">{{ away_team.goals_conceded_per_game }}</td>
+        </tr>
+        <tr>
+          <td class="stat-val {% if home_team.xg_per_game > away_team.xg_per_game %}winner{% endif %}">{{ home_team.xg_per_game }}</td>
+          <td>xG / game</td>
+          <td class="stat-val {% if away_team.xg_per_game > home_team.xg_per_game %}winner{% endif %}">{{ away_team.xg_per_game }}</td>
+        </tr>
+        <tr>
+          <td class="stat-val {% if home_team.shots_on_target_per_game > away_team.shots_on_target_per_game %}winner{% endif %}">{{ home_team.shots_on_target_per_game }}</td>
+          <td>Shots on target / game</td>
+          <td class="stat-val {% if away_team.shots_on_target_per_game > home_team.shots_on_target_per_game %}winner{% endif %}">{{ away_team.shots_on_target_per_game }}</td>
+        </tr>
+        <tr>
+          <td>{{ home_team.fouls_per_game }}</td>
+          <td>Fouls / game</td>
+          <td>{{ away_team.fouls_per_game }}</td>
+        </tr>
+        <tr>
+          <td>{{ home_team.yellow_cards_per_game }}</td>
+          <td>Yellow cards / game</td>
+          <td>{{ away_team.yellow_cards_per_game }}</td>
+        </tr>
+        <tr>
+          <td class="stat-val {% if home_team.possession > away_team.possession %}winner{% endif %}">{{ home_team.possession }}%</td>
+          <td>Possession</td>
+          <td class="stat-val {% if away_team.possession > home_team.possession %}winner{% endif %}">{{ away_team.possession }}%</td>
+        </tr>
+        <tr>
+          <td>{{ home_team.form }}</td>
+          <td>Recent Form</td>
+          <td>{{ away_team.form }}</td>
+        </tr>
+        <tr>
+          <td>#{{ home_team.fifa_ranking }}</td>
+          <td>FIFA Ranking</td>
+          <td>#{{ away_team.fifa_ranking }}</td>
+        </tr>
+      </tbody>
+    </table>
+    {% if home_team.key_players %}
+    <div class="key-players">
+      <div><strong>{{ home_team.name }} Key Players:</strong> {{ home_team.key_players|join(", ") }}</div>
+      <div><strong>{{ away_team.name }} Key Players:</strong> {{ away_team.key_players|join(", ") }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}WC2026 — All Teams{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>All 48 Teams &mdash; World Cup 2026</h1>
+  <p class="subtitle">Sorted by FIFA ranking. Click a team for group match predictions.</p>
+</div>
+
+{% for group, members in groups.items() %}
+<div class="group-section">
+  <h2>Group {{ group }}</h2>
+  <div class="team-cards-row">
+    {% for team in members %}
+    {% set t = teams | selectattr("name", "equalto", team) | first %}
+    {% if t %}
+    <a class="team-card-link" href="/team/{{ t.name }}">
+      <div class="team-card">
+        <div class="team-name">{{ t.name }}</div>
+        <div class="team-rank">#{{ t.fifa_ranking }} FIFA</div>
+        <div class="team-form">Form: {{ t.form }}</div>
+        <div class="team-stat">Goals/g: {{ t.goals_per_game }}</div>
+        <div class="team-stat">xG/g: {{ t.xg_per_game }}</div>
+        <div class="team-stat">Fouls/g: {{ t.fouls_per_game }}</div>
+      </div>
+    </a>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
