@@ -1,6 +1,7 @@
 # Run this script as Administrator
 $ErrorActionPreference = "Stop"
-$sys = "C:\Users\Merlyn\Desktop\NWR6V2\Build\Release\SebwettKM.sys"
+$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sys = Join-Path $root "Build\Release\SebwettKM.sys"
 $sysTmp = $sys + ".tmp"
 $sysBak = $sys + ".bak"
 
@@ -38,7 +39,7 @@ if ($privKey) {
 
 # Step 3: Export to PFX
 Write-Host "`n[2] Exporting to PFX..."
-$pfxPath = "C:\Users\Merlyn\Desktop\NWR6V2\Build\Release\export.pfx"
+$pfxPath = Join-Path $root "Build\Release\export.pfx"
 $pfxPass = ConvertTo-SecureString -String "test123" -Force -AsPlainText
 Export-PfxCertificate -Cert $cert -FilePath $pfxPath -Password $pfxPass
 Write-Host "  Exported to: $pfxPath"
