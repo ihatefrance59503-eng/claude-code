@@ -203,8 +203,15 @@ static bool ValidatePtr(uint64_t e){
 static uint64_t ReadStencilBuffer(uint64_t e){if(!IsValidAddr(e))return 0;return read<uint64_t>(e+0xB8);}
 static uint8_t StencilByte4(uint64_t fb){return(uint8_t)((fb>>32)&0xFF);}
 static uint8_t StencilByte3(uint64_t fb){return(uint8_t)((fb>>24)&0xFF);}
-static bool IsActiveViewport(uint64_t e){return((ReadStencilBuffer(e)>>52)&0xFFF)==0x2C8;}
-static bool IsActiveStencil(uint64_t fb){return ((fb>>52)&0xFFF)==0x2C8;}
+// Stencil class list — a single constant goes stale silently after any update.
+// All three are currently live; 0x448/0x548 are the post-update primary classes.
+static const uint32_t kPlayerStencils[] = { 0x448, 0x548, 0x2C8 };
+static bool IsActiveStencil(uint64_t fb) {
+    const uint32_t cls = (uint32_t)((fb >> 52) & 0xFFF);
+    for (uint32_t s : kPlayerStencils) if (cls == s) return true;
+    return false;
+}
+static bool IsActiveViewport(uint64_t e) { return IsActiveStencil(ReadStencilBuffer(e)); }
 static bool IsClearedStencil(uint64_t fb){
     uint8_t b4=StencilByte4(fb);
     return b4==0x84||b4==0x82||b4==0x80;
