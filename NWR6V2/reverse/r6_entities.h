@@ -680,25 +680,42 @@ static void PollSyncBuffer(int W, int H, int maxD) {
         }
 
 
+        static DWORD s_renderDbgTick = 0;
+        bool renderDbg = (now_tick - s_renderDbgTick > 4000) && !g_syncMap.empty();
+        if (renderDbg) s_renderDbgTick = now_tick;
+
         for (auto it = g_syncMap.begin(); it != g_syncMap.end(); ++it) {
             uint64_t ea = it->first;
             auto& entry = it->second;
 
-            if (!entry.confirmed_player && !IsActiveStencil(entry.filter_byte) && !ValidateDepthStencil(entry.filter_byte))
+            if (!entry.confirmed_player && !IsActiveStencil(entry.filter_byte) && !ValidateDepthStencil(entry.filter_byte)) {
+                if (renderDbg) printf("[RENDER-SKIP] ea=0x%llX GATE cp=%d fb=0x%llX\n", (unsigned long long)ea, entry.confirmed_player?1:0, (unsigned long long)entry.filter_byte);
                 continue;
-
+            }
 
             Vec3 draw_pos = entry.position;
-            if (!ValidateWorldCoord(draw_pos))
+            if (!ValidateWorldCoord(draw_pos)) {
+                if (renderDbg) {
+                    printf("[RENDER-SKIP] ea=0x%llX COORD pos=(%.2f,%.2f,%.2f)\n", (unsigned long long)ea, draw_pos.x, draw_pos.y, draw_pos.z);
+                    // probe raw floats around common position offsets to help locate the right one
+                    for (uint32_t off : {0x50u, 0x60u, 0x70u, 0x80u, 0x90u, 0xA0u, 0x100u, 0x110u, 0x120u, 0x128u, 0x130u, 0x140u}) {
+                        Vec3 v = read<Vec3>(ea + off);
+                        if (std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z)&&(fabsf(v.x)>2.f||fabsf(v.y)>2.f||fabsf(v.z)>2.f)&&fabsf(v.x)<50000.f&&fabsf(v.y)<50000.f&&fabsf(v.z)<50000.f)
+                            printf("[POS-PROBE] ea=0x%llX off=+0x%X (%.1f,%.1f,%.1f)\n", (unsigned long long)ea, off, v.x, v.y, v.z);
+                    }
+                }
                 continue;
+            }
 
             float d = sqrtf(
                 (draw_pos.x - cam.x) * (draw_pos.x - cam.x) +
                 (draw_pos.y - cam.y) * (draw_pos.y - cam.y) +
                 (draw_pos.z - cam.z) * (draw_pos.z - cam.z));
 
-            if (d < k_minRenderDist || d >(float)maxD)
+            if (d < k_minRenderDist || d >(float)maxD) {
+                if (renderDbg) printf("[RENDER-SKIP] ea=0x%llX DIST d=%.1f\n", (unsigned long long)ea, d);
                 continue;
+            }
 
             Vec3 sp = {};
             bool on = W2S(draw_pos, sp, W, H);
