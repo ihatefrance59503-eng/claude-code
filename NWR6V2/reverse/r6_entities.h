@@ -393,12 +393,18 @@ static void FindRound() {
 static void PollFrameRing() {
     if (!g_RingAddr) return;
     uint64_t wi=read<uint64_t>(g_RingAddr);
+    static uint64_t s_lastWi = 0;
+    if (wi != s_lastWi) { printf("[RING] write_idx=%llu (+%llu new)\n", (unsigned long long)wi, (unsigned long long)(wi - s_lastWi)); s_lastWi = wi; }
+    int passed=0, badAddr=0, badPtr=0;
     while (g_ReadIdx < wi) {
         uint64_t idx=g_ReadIdx&(RING_SZ-1);
         uint64_t ep=read<uint64_t>(g_RingAddr+0x10+idx*8);
-        if (IsValidAddr(ep)&&ValidatePtr(ep)) { std::lock_guard<std::mutex> l(g_frameMtx); g_capturedFrames.insert(ep); g_totalFrames++; }
+        if (!IsValidAddr(ep)) { badAddr++; }
+        else if (!ValidatePtr(ep)) { badPtr++; printf("[RING]   FAIL ValidatePtr ep=0x%llX vtable=0x%llX id=%d\n",(unsigned long long)ep,(unsigned long long)read<uint64_t>(ep),read<int>(ep+0x1C)); }
+        else { std::lock_guard<std::mutex> l(g_frameMtx); g_capturedFrames.insert(ep); g_totalFrames++; passed++; }
         g_ReadIdx++;
     }
+    if (passed||badAddr||badPtr) printf("[RING] passed=%d badAddr=%d badPtr=%d total_captured=%llu\n", passed,badAddr,badPtr,(unsigned long long)g_totalFrames);
 }
 
 static bool AttachFrameSync() {
@@ -627,12 +633,20 @@ static void PollSyncBuffer(int W, int H, int maxD) {
         std::lock_guard<std::mutex> clock(g_syncMapMtx);
 
 
+        static DWORD s_stencilDbg = 0;
+        bool stencilDbg = (now_tick - s_stencilDbg > 3000) && !cap.empty();
+        if (stencilDbg) s_stencilDbg = now_tick;
+        int stPass=0, stFail=0;
         for (uint64_t ea : cap) {
             uint64_t fb = ReadStencilBuffer(ea);
+            uint32_t cls = (uint32_t)((fb >> 52) & 0xFFF);
             if (!IsActiveStencil(fb) && !ValidateDepthStencil(fb)) {
+                if (stencilDbg) printf("[STENCIL] FAIL ea=0x%llX fb=0x%llX cls=0x%X\n",(unsigned long long)ea,(unsigned long long)fb,cls);
+                stFail++;
                 g_syncMap.erase(ea);
                 continue;
             }
+            stPass++;
 
             auto& entry = g_syncMap[ea];
             entry.filter_byte = fb;
@@ -644,6 +658,7 @@ static void PollSyncBuffer(int W, int H, int maxD) {
         }
 
 
+        if (stencilDbg && !cap.empty()) printf("[STENCIL] cap=%zu pass=%d fail=%d syncMap=%zu\n", cap.size(), stPass, stFail, g_syncMap.size());
         for (auto it = g_syncMap.begin(); it != g_syncMap.end(); ) {
             auto age = std::chrono::duration_cast<std::chrono::milliseconds>(now - it->second.last_seen);
             if (age > k_syncMaxAge) {
