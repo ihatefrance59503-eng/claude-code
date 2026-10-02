@@ -1,0 +1,248 @@
+﻿  imgui.cpp
+  imgui_draw.cpp
+  imgui_impl_dx9.cpp
+  imgui_impl_win32.cpp
+  imgui_widgets.cpp
+  Code wird generiert...
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(883,72): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(883,44): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(894,20): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(896,67): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(896,48): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(917,117): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(917,92): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(918,31): warning C4305: "Argument": Verkürzung von "double" in "float"
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(923,59): warning C4305: "Argument": Verkürzung von "double" in "float"
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(923,99): warning C4305: "Argument": Verkürzung von "double" in "float"
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Imgui\imgui_widgets.cpp(926,75): warning C4305: "Argument": Verkürzung von "double" in "float"
+  main.cpp
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(141,28): warning C4244: "return": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(146,31): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(146,52): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(146,73): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(180,22): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(181,22): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(182,22): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(184,12): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(185,12): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(186,12): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(188,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(189,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(190,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(191,32): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(192,32): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(193,32): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(195,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(196,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(197,23): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(198,23): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(200,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(201,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(202,23): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(203,23): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(205,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(206,13): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(207,23): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(208,23): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(249,58): warning C4267: "Argument": Konvertierung von "size_t" nach "int", Datenverlust möglich
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\uxtheme.h(1600,57): warning C4459: Deklaration von "hwnd" blendet globale Deklaration aus
+  (Quelldatei „main.cpp“ wird kompiliert)
+      C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(27,6):
+      Siehe Deklaration von "hwnd"
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(112,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(136,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(154,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(171,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(188,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(200,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(214,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\driver.h(224,25): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Keybind.h(55,22): warning C4100: "blank": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Keybind.h(71,24): warning C4100: "blank": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Keybind.h(87,25): warning C4100: "blank": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Keybind.h(103,23): warning C4100: "blank": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Keybind.h(119,26): warning C4100: "blank": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\Keybind.h(784,14): warning C4459: Deklaration von "aimkeys" blendet globale Deklaration aus
+  (Quelldatei „main.cpp“ wird kompiliert)
+      C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(43,20):
+      Siehe Deklaration von "aimkeys"
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_scanner.h(118,64): warning C4100: "moduleSize": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_scanner.h(118,43): warning C4100: "moduleBase": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_scanner.h(198,39): warning C4100: "moduleBase": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\skeleton_emu.h(14,42): warning C4100: "entity": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(72,25): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(165,13): warning C4211: Nicht dem Standard entsprechende Erweiterung: Neudefinition von extern als statisch
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(569,39): warning C4245: "Argument": Konvertierung von "int" in "ULONG", signed/unsigned-Konflikt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(746,17): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(766,78): warning C4100: "aimSmooth": Unreferenzierter formaler Parameter
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(114,12): warning C4099: "Vector3": Geben Sie den zuerst unter Verwendung von "class" und jetzt unter Verwendung von "struct" gesehenen Namen ein
+      C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(118,7):
+      Siehe Deklaration von "Vector3"
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(115,12): warning C4099: "Vector3": Geben Sie den zuerst unter Verwendung von "class" und jetzt unter Verwendung von "struct" gesehenen Namen ein
+      C:\Users\User\Desktop\R6 Paster Six external\reverse\pasterx.h(118,7):
+      Siehe Deklaration von "Vector3"
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(136,129): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(136,110): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(136,83): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(136,64): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(161,25): warning C4100: "in": Unreferenzierter formaler Parameter
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(206,14): warning C4211: Nicht dem Standard entsprechende Erweiterung: Neudefinition von extern als statisch
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(210,14): warning C4211: Nicht dem Standard entsprechende Erweiterung: Neudefinition von extern als statisch
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(215,14): warning C4211: Nicht dem Standard entsprechende Erweiterung: Neudefinition von extern als statisch
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(225,14): warning C4211: Nicht dem Standard entsprechende Erweiterung: Neudefinition von extern als statisch
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(230,32): warning C4100: "argv": Unreferenzierter formaler Parameter
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(230,14): warning C4100: "argc": Unreferenzierter formaler Parameter
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(234,12): warning C4189: "hpStdout": Lokale Variable ist initialisiert aber nicht referenziert
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(852,29): warning C4244: "=": Konvertierung von "LONG" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(853,29): warning C4244: "=": Konvertierung von "LONG" in "float", möglicher Datenverlust
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(874,42): warning C4459: Deklaration von "Message" blendet globale Deklaration aus
+      C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(827,5):
+      Siehe Deklaration von "Message"
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\antitamper.h(209,13): warning C4505: "_rcal_verify_pipeline": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\operator_icons.h(46992,23): warning C4505: "FindOpIcon": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\operator_esp.h(132,13): warning C4505: "ReleaseShaderResources": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(71,13): warning C4505: "DBG": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(182,16): warning C4505: "StencilByte3": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(183,13): warning C4505: "IsActiveViewport": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(189,13): warning C4505: "IsStencilCleared": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(197,13): warning C4505: "IsSharedViewport": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(212,13): warning C4505: "ValidateStencilMask": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(382,13): warning C4505: "ResolveViewportOrigin": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\r6_entities.h(418,13): warning C4505: "InterpolateFrameCoord": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  (Quelldatei „main.cpp“ wird kompiliert)
+  
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(220,14): warning C4505: "GetTrailColor": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(481,20): warning C4505: "FetchRemoteBrandConfig": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(491,13): warning C4505: "ValidateOverlayLicense": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+C:\Users\User\Desktop\R6 Paster Six external\reverse\main.cpp(506,12): warning C4505: "QueryServerMenuStyle": Eine nicht referenzierte Funktion mit interner Verknüpfung wurde entfernt.
+  LINK : /LTCG wurde angegeben, es ist jedoch keine Codegenerierung erforderlich. Entfernen Sie /LTCG aus der Linkbefehlszeile, um die Linkerleistung zu erhöhen.
+  reverse.vcxproj -> C:\Users\User\Desktop\R6 Paster Six external\x64\Release\PasterSix RainbowSix made by Overhead.exe
+  Der Befehl "pwsh.exe" ist entweder falsch geschrieben oder
+  konnte nicht gefunden werden.

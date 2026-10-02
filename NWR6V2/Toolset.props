@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.MSVC.Toolset.x64.props"/>
+  <PropertyGroup>
+    <WindowsSdkDir Condition="'$(WindowsSdkDir)' == ''">C:\Program Files (x86)\Windows Kits\10\</WindowsSdkDir>
+    <WindowsSdkVersion>10.0.26100.0</WindowsSdkVersion>
+    <KernelEnabled>true</KernelEnabled>
+    <TargetMachine>MachineX64</TargetMachine>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(WindowsSdkDir)Include\10.0.26100.0\km;$(WindowsSdkDir)Include\10.0.26100.0\shared;$(WindowsSdkDir)Include\10.0.26100.0\um;$(WindowsSdkDir)Include\10.0.26100.0\ucrt;$(IncludePath)</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\10.0.26100.0\km\x64;$(WindowsSdkDir)Lib\10.0.26100.0\um\x64;$(WindowsSdkDir)Lib\10.0.26100.0\ucrt\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_M_AMD64;_WIN64;NT_KERNEL_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4201;4244;4100;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(_PlatformFolder)Platform.Common.props"/>
+</Project>
