@@ -205,7 +205,7 @@ static uint8_t StencilByte4(uint64_t fb){return(uint8_t)((fb>>32)&0xFF);}
 static uint8_t StencilByte3(uint64_t fb){return(uint8_t)((fb>>24)&0xFF);}
 // Stencil class list — a single constant goes stale silently after any update.
 // All three are currently live; 0x448/0x548 are the post-update primary classes.
-static const uint32_t kPlayerStencils[] = { 0x448, 0x548, 0x2C8 };
+static const uint32_t kPlayerStencils[] = { 0x148, 0x448, 0x548, 0x2C8 };
 static bool IsActiveStencil(uint64_t fb) {
     const uint32_t cls = (uint32_t)((fb >> 52) & 0xFFF);
     for (uint32_t s : kPlayerStencils) if (cls == s) return true;
@@ -673,7 +673,7 @@ static void PollSyncBuffer(int W, int H, int maxD) {
             uint64_t ea = it->first;
             auto& entry = it->second;
 
-            if (!ValidateDepthStencil(entry.filter_byte))
+            if (!IsActiveStencil(entry.filter_byte) && !ValidateDepthStencil(entry.filter_byte))
                 continue;
 
 
