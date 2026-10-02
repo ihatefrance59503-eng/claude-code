@@ -42,6 +42,7 @@ struct RenderSyncEntry {
     uint64_t filter_byte = 0;
     std::chrono::steady_clock::time_point last_seen{};
     std::chrono::steady_clock::time_point position_time{};
+    bool confirmed_player = false; // set true once IsActiveStencil ever fires
 };
 
 extern bool fillbox;
@@ -643,12 +644,22 @@ static void PollSyncBuffer(int W, int H, int maxD) {
             if (!IsActiveStencil(fb) && !ValidateDepthStencil(fb)) {
                 if (stencilDbg) printf("[STENCIL] FAIL ea=0x%llX fb=0x%llX cls=0x%X\n",(unsigned long long)ea,(unsigned long long)fb,cls);
                 stFail++;
-                g_syncMap.erase(ea);
+                auto ex = g_syncMap.find(ea);
+                if (ex != g_syncMap.end() && ex->second.confirmed_player) {
+                    // Stencil temporarily 0 (game culled from renderer) — keep tracking
+                    Vec3 position{};
+                    if (ReadActorOrigin(ea, position) && (position.x != 0.f || position.y != 0.f || position.z != 0.f))
+                        SyncFrameState(ex->second, position, now);
+                    ex->second.last_seen = now;
+                } else {
+                    g_syncMap.erase(ea);
+                }
                 continue;
             }
             stPass++;
 
             auto& entry = g_syncMap[ea];
+            if (IsActiveStencil(fb)) entry.confirmed_player = true;
             entry.filter_byte = fb;
             entry.last_seen = now;
 
@@ -673,7 +684,7 @@ static void PollSyncBuffer(int W, int H, int maxD) {
             uint64_t ea = it->first;
             auto& entry = it->second;
 
-            if (!IsActiveStencil(entry.filter_byte) && !ValidateDepthStencil(entry.filter_byte))
+            if (!entry.confirmed_player && !IsActiveStencil(entry.filter_byte) && !ValidateDepthStencil(entry.filter_byte))
                 continue;
 
 
