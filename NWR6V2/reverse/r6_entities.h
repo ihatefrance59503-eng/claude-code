@@ -326,24 +326,7 @@ static bool IsEntityInFOV(const Vec3& entityPos, const Vec3& camPos, const Matri
 
 static bool ReadActorOrigin(uint64_t actor, Vec3& out) {
     if (!actor || !IsValidAddr(actor)) return false;
-
-    uint16_t flag_5e = read<uint16_t>(actor + 0x5E);
-    uint16_t flag_6e = read<uint16_t>(actor + 0x6E);
-
-    bool enc_5e = flag_5e == 0;
-    bool enc_6e = flag_6e == 0;
-    bool want_encrypted = enc_5e || enc_6e;
-    bool want_plain = (flag_5e != 0) && (flag_6e != 0);
-
-    if (want_encrypted) {
-        if (TryEncryptedPos(actor, out)) return true;
-        return false;
-    }
-
-    if (want_plain) {
-        if (TryPlainPos(actor, out)) return true;
-    }
-
+    // Try MBA-encrypted chain first, always fall through to plain offsets
     if (TryEncryptedPos(actor, out)) return true;
     return TryPlainPos(actor, out);
 }
