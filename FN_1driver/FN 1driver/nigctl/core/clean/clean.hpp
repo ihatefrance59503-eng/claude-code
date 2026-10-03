@@ -13,6 +13,20 @@
 namespace clean {
 
     // ------------------------------------------------------------------
+    // Runtime gates. All default OFF so an unknown Windows build does not
+    // BSOD on first load from a clean walker reading the wrong offsets.
+    // Flip one at a time once nigctl is confirmed loading cleanly.
+    //   enable_hash_bucket  PiDDBCacheTable hash-bucket wipe
+    //   enable_mmu          MmUnloadedDrivers compact pass
+    //   enable_cache        PiDDBCacheTable entry removal
+    //   enable_extras       PsLoadedModuleList unlink + metadata steal
+    // ------------------------------------------------------------------
+    inline bool enable_hash_bucket = false;
+    inline bool enable_mmu         = false;
+    inline bool enable_cache       = false;
+    inline bool enable_extras      = false;
+
+    // ------------------------------------------------------------------
     // clear_hash_bucket: wipe PiDDBCacheTable entry for DriverName
     // ------------------------------------------------------------------
     BOOL clear_hash_bucket(UNICODE_STRING DriverName) {

@@ -6,10 +6,11 @@
 #include "../clean/clean.hpp"
 #include "../major/major.hpp"
 
-// KEVLAR_BUILD define is injected by VS2022 preprocessor on the emu config
-// (Project > Properties > C/C++ > Preprocessor > Preprocessor Definitions).
-// Release builds OMIT it so the four clean::* calls run on real hardware.
-// This replaces the manual commit-37d40fc comment/uncomment dance.
+// KEVLAR_BUILD define is injected by VS2022 preprocessor on the emu config.
+// Release builds OMIT it so the four clean::* calls are compiled in. Each
+// call is additionally runtime-gated by a bool in clean:: (default false),
+// so an unknown Windows build can prove it maps clean before any clean
+// walker touches undocumented ntoskrnl / ci.dll structures.
 
 namespace creation {
     NTSTATUS driver_init(PDRIVER_OBJECT drv_obj, PUNICODE_STRING reg_pth) {
@@ -22,11 +23,14 @@ namespace creation {
 
 #ifndef KEVLAR_BUILD
         // real-hardware stealth: scrub PiDDBCacheTable, MmUnloadedDrivers, and
-        // their caches. these ALL pattern-scan into unmapped ntoskrnl/ci.dll
-        // regions inside KEVLAR so they're gated out of the emu build.
-        clean::clear_hash_bucket(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
-        clean::CleanMmu(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
-        clean::clearCache(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")), 1698136146);
+        // their caches. Each guarded by its own runtime bool so a bad walker
+        // on an unknown Win build does not take the box down.
+        if (clean::enable_hash_bucket)
+            clean::clear_hash_bucket(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
+        if (clean::enable_mmu)
+            clean::CleanMmu(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
+        if (clean::enable_cache)
+            clean::clearCache(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")), 1698136146);
 #endif
 
         NTSTATUS st = imports::IoCreateDevice(
@@ -45,7 +49,8 @@ namespace creation {
 #ifndef KEVLAR_BUILD
         // clean_extras must run AFTER the device/symlink are live but BEFORE
         // we null out drv_obj->DriverSection below (clean_extras walks it).
-        clean::clean_extras(drv_obj);
+        if (clean::enable_extras)
+            clean::clean_extras(drv_obj);
 #endif
 
         drv_obj->DriverStart = NULL;
