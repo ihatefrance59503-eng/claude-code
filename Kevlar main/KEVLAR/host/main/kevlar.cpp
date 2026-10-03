@@ -25,6 +25,128 @@
 #include "host/providers/provider.h"
 #include "core/registry/virtual_fs.h"
 #include "api/io/io_device.h"
+#include "core/io/io_manager.h"
+
+// nigctl-harness: exercise the four IOCTLs defined by the usermode
+// communcation.hpp (0x1889 get_image, 0x1299 get_cr3, 0x4299 get_peb,
+// 0x1999 read_memory). Fires each one against System pid (4) with
+// SECURITY_FLAG 0x1E2E3F, then logs the status and any writeback value.
+// Pure research exerciser - prints what the driver actually does when
+// usermode sends the real IOCTLs it would send.
+static void RunNigctlIoctlHarness() {
+    using namespace IoManager;
+
+    uint64_t DevUc = DeviceTracker::GetFirst();
+    if (!DevUc) {
+        Logger::Log("{RED}[HARNESS] No device registered - skipping IOCTL harness{RESET}\n");
+        return;
+    }
+    Logger::Log("{CYN}=== nigctl IOCTL harness - exercising major::io_controller ==={RESET}\n");
+    Logger::Log("{CYN}[HARNESS] Device UC: {WHT}0x%llx{RESET}\n", DevUc);
+
+    uc_engine* Uc = UnicornEmu::PrimaryEngine;
+    uint64_t FileUc = AllocateFileObject(Uc, DevUc);
+    Logger::Log("{CYN}[HARNESS] FileObject UC: {WHT}0x%llx{RESET}\n", FileUc);
+
+    auto Cr = DispatchCreate(DevUc, FileUc);
+    Logger::Log("{CYN}[HARNESS] IRP_MJ_CREATE -> status=0x%08x info=0x%llx{RESET}\n",
+        Cr.Status, (uint64_t)Cr.Information);
+
+    const int32_t kSec = 0x1E2E3F;
+    const int32_t kPid = 4; // System process - safe stand-in for a target
+
+    // --- 0x1889 get_image (sizeof(Image) = 16) ---
+    {
+        #pragma pack(push, 1)
+        struct { int32_t Security; int32_t ProcessID; uint64_t AddressPtr; } Req{};
+        #pragma pack(pop)
+        Req.Security = kSec;
+        Req.ProcessID = kPid;
+        uint64_t ResultUc = UnicornMem::AllocateVariable(Uc, sizeof(uint64_t), "HarnessImgResult");
+        Req.AddressPtr = ResultUc;
+
+        ULONG Returned = 0;
+        auto R = DispatchDeviceIoControl(DevUc, FileUc, 0x1889,
+            &Req, sizeof(Req), nullptr, 0, &Returned);
+        uint64_t Img = 0;
+        uc_mem_read(Uc, ResultUc, &Img, sizeof(Img));
+        Logger::Log("{YEL}[HARNESS] IOCTL 0x1889 get_image: status=0x%08x bytes=%u ImageBase=0x%llx{RESET}\n",
+            R.Status, Returned, Img);
+    }
+
+    // --- 0x1299 get_cr3 (sizeof(Dirbase) = 16) ---
+    {
+        #pragma pack(push, 1)
+        struct { int32_t Security; int32_t ProcessID; uint64_t OperationPtr; } Req{};
+        #pragma pack(pop)
+        Req.Security = kSec;
+        Req.ProcessID = kPid;
+        uint64_t FlagUc = UnicornMem::AllocateVariable(Uc, sizeof(bool), "HarnessCr3Flag");
+        Req.OperationPtr = FlagUc;
+
+        ULONG Returned = 0;
+        auto R = DispatchDeviceIoControl(DevUc, FileUc, 0x1299,
+            &Req, sizeof(Req), nullptr, 0, &Returned);
+        Logger::Log("{YEL}[HARNESS] IOCTL 0x1299 get_cr3: status=0x%08x bytes=%u{RESET}\n",
+            R.Status, Returned);
+    }
+
+    // --- 0x4299 get_peb (sizeof(DTB) = 24) ---
+    {
+        #pragma pack(push, 1)
+        struct { int32_t Security; int32_t ProcessID; uint64_t OperationPtr; uint64_t Address; } Req{};
+        #pragma pack(pop)
+        Req.Security = kSec;
+        Req.ProcessID = kPid;
+        uint64_t PebUc = UnicornMem::AllocateVariable(Uc, sizeof(uint64_t), "HarnessPebResult");
+        Req.Address = PebUc;
+
+        ULONG Returned = 0;
+        auto R = DispatchDeviceIoControl(DevUc, FileUc, 0x4299,
+            &Req, sizeof(Req), nullptr, 0, &Returned);
+        uint64_t Peb = 0;
+        uc_mem_read(Uc, PebUc, &Peb, sizeof(Peb));
+        Logger::Log("{YEL}[HARNESS] IOCTL 0x4299 get_peb: status=0x%08x bytes=%u PEB=0x%llx{RESET}\n",
+            R.Status, Returned, Peb);
+    }
+
+    // --- 0x1999 read_memory (sizeof(ReadWrite) = 40 with trailing pad) ---
+    {
+        #pragma pack(push, 1)
+        struct {
+            int32_t Security;
+            int32_t ProcessID;
+            uint64_t Address;
+            uint64_t Buffer;
+            uint64_t Size;
+            uint8_t Write;
+            uint8_t EAC;
+            uint8_t _pad[6];
+        } Req{};
+        #pragma pack(pop)
+        Req.Security = kSec;
+        Req.ProcessID = kPid;
+        Req.Address = 0xfffff80300000000; // ntoskrnl base - something real to read
+        uint64_t BufUc = UnicornMem::AllocateVariable(Uc, 16, "HarnessReadBuf");
+        Req.Buffer = BufUc;
+        Req.Size = 8;
+        Req.Write = 0;
+        Req.EAC = 1;
+
+        ULONG Returned = 0;
+        auto R = DispatchDeviceIoControl(DevUc, FileUc, 0x1999,
+            &Req, sizeof(Req), nullptr, 0, &Returned);
+        uint64_t Val = 0;
+        uc_mem_read(Uc, BufUc, &Val, sizeof(Val));
+        Logger::Log("{YEL}[HARNESS] IOCTL 0x1999 read_memory(ntoskrnl base, 8 bytes): status=0x%08x bytes=%u val=0x%llx{RESET}\n",
+            R.Status, Returned, Val);
+    }
+
+    auto Cl = DispatchClose(DevUc, FileUc);
+    Logger::Log("{CYN}[HARNESS] IRP_MJ_CLOSE -> status=0x%08x{RESET}\n", Cl.Status);
+    FreeFileObject(FileUc);
+    Logger::Log("{GRN}=== IOCTL harness complete ==={RESET}\n");
+}
 
 __forceinline void InitDirs() {
     char ExePath[MAX_PATH] = { 0 };
@@ -386,6 +508,9 @@ int main(int Argc, char* Argv[]) {
         Logger::Log("{GRN}DriverEntry completed successfully{RESET}\n");
     else
         Logger::Log("{RED}DriverEntry failed or was stopped{RESET}\n");
+
+    if (Result)
+        RunNigctlIoctlHarness();
 
     Logger::Log("{MAG}Waiting for spawned threads (will keep alive up to 3600s for deferred work)...{RESET}\n");
 
