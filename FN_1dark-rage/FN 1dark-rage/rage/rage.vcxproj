@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{e69905db-f927-4ad1-994f-08af94a743a5}</ProjectGuid>
+    <RootNamespace>rage</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\dark\Desktop\ImGui\neron %281%29\neron\thirdparty\freetype\include;C:\Users\dark\Desktop\ImGui\neron %281%29\neron\thirdparty\freetype\include\freetype;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <AdditionalDependencies>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64\d3d11.lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64\d3dx11.lib;C:\Users\dark\Desktop\rage (for sale)\rage\rage\dependenices\imgui\thirdparty\lib\freetype64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="dependenices\extras\extras.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui_demo.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui_draw.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui_freetype.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui_tables.cpp" />
+    <ClCompile Include="dependenices\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="dependenices\imgui\slate\src\draw.cpp" />
+    <ClCompile Include="dependenices\imgui\slate\src\slate.cpp" />
+    <ClCompile Include="dependenices\imgui\slate\src\style.cpp" />
+    <ClCompile Include="dependenices\imgui\slate\src\widgets.cpp" />
+    <ClCompile Include="dependenices\memory\memory.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\drawing\drawing.cpp" />
+    <ClCompile Include="src\game\features\aimbot\aimbot.cpp" />
+    <ClCompile Include="src\game\features\aimbot\makcu.cpp" />
+    <ClCompile Include="src\game\features\health\health.cpp" />
+    <ClCompile Include="src\game\features\misc\misc.cpp" />
+    <ClCompile Include="src\game\features\radar\radar.cpp" />
+    <ClCompile Include="src\game\features\trigger\trigger.cpp" />
+    <ClCompile Include="src\game\features\visuals\visuals.cpp" />
+    <ClCompile Include="src\game\features\widgets\game_widgets.cpp" />
+    <ClCompile Include="src\game\features\zone\zone.cpp" />
+    <ClCompile Include="src\game\sdk\sdk.cpp" />
+    <ClCompile Include="src\game\offsets\offsets_resolver.hpp" />
+    <ClCompile Include="src\game\thread\entity\entity.cpp" />
+    <ClCompile Include="src\game\thread\event_manager.cpp" />
+    <ClCompile Include="src\game\thread\world\world.cpp" />
+    <ClCompile Include="src\render\render.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dependenices\configs\config.hpp" />
+    <ClInclude Include="dependenices\extras\extras.hpp" />
+    <ClInclude Include="dependenices\imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="dependenices\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="dependenices\imgui\imconfig.h" />
+    <ClInclude Include="dependenices\imgui\imgui.h" />
+    <ClInclude Include="dependenices\imgui\imgui_freetype.h" />
+    <ClInclude Include="dependenices\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="dependenices\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="dependenices\imgui\imgui_internal.h" />
+    <ClInclude Include="dependenices\imgui\imstb_rectpack.h" />
+    <ClInclude Include="dependenices\imgui\imstb_textedit.h" />
+    <ClInclude Include="dependenices\imgui\imstb_truetype.h" />
+    <ClInclude Include="dependenices\imgui\slate\include\draw.h" />
+    <ClInclude Include="dependenices\imgui\slate\include\font.h" />
+    <ClInclude Include="dependenices\imgui\slate\include\model.h" />
+    <ClInclude Include="dependenices\imgui\slate\include\slate.h" />
+    <ClInclude Include="dependenices\imgui\slate\include\style.h" />
+    <ClInclude Include="dependenices\imgui\slate\include\types.h" />
+    <ClInclude Include="dependenices\imgui\slate\include\unicodes.hpp" />
+    <ClInclude Include="dependenices\imgui\slate\include\widgets.h" />
+    <ClInclude Include="dependenices\imgui\slate\resources\fonts.h" />
+    <ClInclude Include="dependenices\imgui\slate\resources\images.h" />
+    <ClInclude Include="dependenices\impl.hpp" />
+    <ClInclude Include="dependenices\memory\memory.hpp" />
+    <ClInclude Include="dependenices\mouse\mouse.hpp" />
+    <ClInclude Include="dependenices\skcrypt\skcrypt.hpp" />
+    <ClInclude Include="src\drawing\drawing.hpp" />
+    <ClInclude Include="src\game\features\aimbot\aimbot.hpp" />
+    <ClInclude Include="src\game\features\aimbot\makcu.hpp" />
+    <ClInclude Include="src\game\features\misc\misc.hpp" />
+    <ClInclude Include="src\game\features\radar\radar.hpp" />
+    <ClInclude Include="src\game\features\health\health.hpp" />
+    <ClInclude Include="src\game\features\trigger\trigger.hpp" />
+    <ClInclude Include="src\game\features\visuals\visuals.hpp" />
+    <ClInclude Include="src\game\features\widgets\widgets.hpp" />
+    <ClInclude Include="src\game\features\zone\zone.hpp" />
+    <ClInclude Include="src\game\offsets\offsets.hpp" />
+    <ClInclude Include="src\game\primitives\primitives.hpp" />
+    <ClInclude Include="src\game\sdk\sdk.hpp" />
+    <ClInclude Include="src\game\thread\entity\entity.hpp" />
+    <ClInclude Include="src\game\thread\event_manager.hpp" />
+    <ClInclude Include="src\game\thread\world\world.hpp" />
+    <ClInclude Include="src\render\render.hpp" />
+    <ClInclude Include="src\settings\settings.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ItemDefinitionGroup>
+    <PreBuildEvent>
+      <Command>start https://discord.gg/newreality</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+</Project>
