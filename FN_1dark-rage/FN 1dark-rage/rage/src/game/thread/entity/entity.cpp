@@ -1,0 +1,314 @@
+// this source is from NewReality a discord server with 1500+ sources: discord.gg/newreality
+#include "entity.hpp"
+#include <cctype>
+#include <vector>
+#include <memory>
+#include <mutex>
+
+namespace fortnite
+{
+    namespace entity
+    {
+        template<typename T>
+        static void process_actors( std::vector<T>& out , bool ( *condition )( uint64_t , T& ) )
+        {
+            out.clear( );
+            auto world_data = world::get( );
+            if ( !world_data || !world_data->gworld ) return;
+
+            for ( int i = 0; i < world_data->levels.get_count( ); i++ )
+            {
+                uint64_t level = world_data->levels.get( i );
+                if ( !level ) continue;
+
+                auto actors_array = communcations::read<ueegnine::tarray<uint64_t>>( level + offsets::aactors );
+                if ( !actors_array.is_valid( ) ) continue;
+
+                for ( int j = 0; j < actors_array.get_count( ); j++ )
+                {
+                    uint64_t actor = actors_array.get( j );
+                    if ( !actor ) continue;
+
+                    T data {};
+                    if ( condition( actor , data ) )
+                    {
+                        data.current = actor;
+                        data.root_component = communcations::read<uint64_t>( actor + 0x1B0 );
+
+                        out.emplace_back( std::move( data ) );
+                    }
+                }
+            }
+        }
+
+        static void bulk_process_actors( std::vector<processed_actor_data>& out , uint64_t player_controller )
+        {
+            out.clear( );
+            auto world_data = world::get( );
+            if ( !world_data || !world_data->gworld ) return;
+
+            for ( int i = 0; i < world_data->levels.get_count( ); i++ )
+            {
+                uint64_t level = world_data->levels.get( i );
+                if ( !level ) continue;
+
+                auto actors_array = communcations::read<ueegnine::tarray<uint64_t>>( level + offsets::aactors );
+                if ( !actors_array.is_valid( ) ) continue;
+
+                for ( int j = 0; j < actors_array.get_count( ); j++ )
+                {
+                    uint64_t actor = actors_array.get( j );
+                    if ( !actor ) continue;
+
+                    processed_actor_data data {};
+                    data.actor = actor;
+                    data.root_component = communcations::read<uint64_t>( actor + 0x1B0 );
+
+                    data.revive_time = communcations::read<float>( actor + offsets::revive_time_from_dbno );
+                    data.lifespan_after_death = communcations::read<float>( actor + offsets::lifespan_after_death );
+                    data.max_level = communcations::read<int32_t>( actor + offsets::max_level );
+
+                    data.simulating_too_long_length = communcations::read<float>( actor + offsets::simulating_too_long_length );
+                    data.search_text_ptr = communcations::read<uint64_t>( actor + offsets::search_text );
+
+                    data.player_state = communcations::read<uint64_t>( actor + offsets::player_state );
+
+                    data.mesh = communcations::read<uint64_t>( actor + offsets::mesh );
+                    data.current_weapon = communcations::read<uint64_t>( actor + offsets::current_weapon );
+
+                    data.container_flags = communcations::read<uint8_t>( actor + 0xcf2 );
+                    data.container_mesh_component = communcations::read<uint64_t>( actor + 0x780 );
+                    data.container_spawn_source = communcations::read<int32_t>( actor + 0xbb8 );
+
+                    data.vehicle_critical_health = communcations::read<float>( actor + 0x1d94 );
+                    data.vehicle_mesh = communcations::read<uint64_t>( actor + 0x878 );
+
+                    out.emplace_back( std::move( data ) );
+                }
+            }
+
+            // Update global shared data
+            {
+                std::lock_guard<std::mutex> lock( g_bulk_mutex );
+                g_shared_bulk_data = out;
+            }
+        }
+
+        static std::unordered_map<uint64_t , EFortRarity> pickup_rarity_cache;
+
+        void start( )
+        {
+            // Master cache runs frequently (30ms) and updates shared bulk data for ALL caches
+            master_cache.start( [ ]( std::vector<uint8_t>& out )
+                {
+                    auto world_data = world::get( );
+                    if ( !world_data || !world_data->gworld || !world_data->game_instance ) return;
+
+                    std::vector<processed_actor_data> temp_bulk;
+                    bulk_process_actors( temp_bulk , world_data->player_controller );
+
+                    out.clear( );
+                    out.emplace_back( 1 );
+                } , 30000 ); // 30ms - FAST master update for stable ESP
+
+            // Actor cache - uses shared data, faster update rate
+            actor_cache.start( [ ]( std::vector<actor_data>& out )
+                {
+
+                    auto world_data = world::get( );
+                    if ( !world_data || !world_data->gworld || !world_data->game_instance ) return;
+
+                    std::vector<processed_actor_data> bulk_data;
+                    {
+                        std::lock_guard<std::mutex> lock( g_bulk_mutex );
+                        bulk_data = g_shared_bulk_data;
+                    }
+
+                    bool in_lobby;
+                    uint64_t game_state = communcations::read<uint64_t>( world_data->gworld + offsets::game_state );
+                    float server_world_time_seconds_delta = communcations::read<float>( game_state + 0x2e8 );
+                    in_lobby = ( server_world_time_seconds_delta == 0 );
+
+                    out.clear( );
+                    for ( const auto& data : bulk_data )
+                    {
+                        if ( data.revive_time != 10.0f ) continue;
+                        if ( data.actor == communcations::read<uint64_t>( world_data->player_controller + 0x358 ) ) {
+                            local_pawn = data.actor;
+                            continue;
+                        }
+
+                    /*    if ( in_lobby )
+                        {
+                            if ( !data.mesh )
+                                continue;
+                        }
+                        else
+                        {
+                            if ( !data.player_state || !data.mesh )
+                                continue;
+                        }*/
+
+                        actor_data actor {};
+                        actor.current = data.actor;
+                        actor.mesh = data.mesh;
+                        actor.player_state = data.player_state;
+                        actor.root_component = communcations::read<int32_t>( data.actor + offsets::root_component );
+                        actor.team_id = communcations::read<int32_t>( data.player_state + offsets::team_index );
+                        actor.squad_size = communcations::read<int32_t>( data.player_state + offsets::initial_squad_size );
+                        actor.rank = "Bronze 1";
+                        auto weapon_data = communcations::read<uint64_t>( data.current_weapon + offsets::weapon_data );
+                        actor.name = fortnite::engine::helpers::decrypt_name( data.player_state , in_lobby );
+                        actor.platform = fortnite::engine::helpers::get_platform( data.player_state );
+                        auto name = communcations::read<ueegnine::ftext>( weapon_data + 0x38 );
+                        actor.weapon_name = name.get( );
+                        out.emplace_back( std::move( actor ) );
+                    }
+                } , 50000 ); // 50ms - faster for stable player ESP
+
+            pickup_cache.start( [ ]( std::vector<pickup_data>& out )
+                {
+                    if ( fortnite::settings::world::battlemode_toggle || !fortnite::settings::world::enabled || !fortnite::settings::world::pickups ) {
+                        return;
+                    }
+                    std::vector<processed_actor_data> bulk_data;
+                    {
+                        std::lock_guard<std::mutex> lock( g_bulk_mutex );
+                        bulk_data = g_shared_bulk_data;
+                    }
+
+                    out.clear( );
+                    for ( const auto& data : bulk_data )
+                    {
+                        if ( data.simulating_too_long_length != 30.0f ) continue;
+                        pickup_data pickup {};
+                        pickup.current = data.actor;
+                        pickup.root_comp = data.root_component;
+
+                        uint64_t item_def = communcations::read<uint64_t>( data.actor + offsets::primary_pickup_item_entry + 0x10 );
+                        auto it = pickup_rarity_cache.find( item_def );
+                        if ( it != pickup_rarity_cache.end( ) )
+                        {
+                            pickup.rarity = it->second;
+                        }
+                        else
+                        {
+                            auto rarity = fortnite::engine::helpers::get_rarity( item_def );
+                            pickup_rarity_cache [ item_def ] = rarity;
+                            pickup.rarity = rarity;
+                        }
+
+                        auto name = communcations::read<ueegnine::ftext>( item_def + 0x38 );
+                        pickup.name = name.get( );
+
+                        out.emplace_back( std::move( pickup ) );
+                    }
+                } , 80000 ); // 80ms - faster for stable pickup ESP
+
+            container_cache.start( [ ]( std::vector<container_data>& out ) {
+                if ( fortnite::settings::world::battlemode_toggle || !fortnite::settings::world::enabled || !fortnite::settings::world::containers ) {
+                    return;
+                }
+                std::vector<processed_actor_data> bulk_data;
+                {
+                    std::lock_guard<std::mutex> lock( g_bulk_mutex );
+                    bulk_data = g_shared_bulk_data;
+                }
+
+                out.clear( );
+                for ( const auto& data : bulk_data )
+                {
+                    if ( !data.search_text_ptr ) continue;
+
+                    ueegnine::ftext search_text( data.search_text_ptr );
+                    if ( search_text.get( ).find( "Search" ) == std::string::npos ) continue;
+                    if ( ( data.container_flags >> 3 ) & 1 ) continue;
+                    std::cout << "found chest\n";
+
+                    container_data container {};
+                    container.current = data.actor;
+                    container.root_component = data.root_component;
+                    container.mesh_component = data.container_mesh_component;
+                    container.spawn_source = data.container_spawn_source;
+
+                    out.emplace_back( std::move( container ) );
+                }
+                } , 100000 ); // 100ms - faster for stable container ESP
+
+            vehicle_cache.start( [ ]( std::vector<vehicle_data>& out ) {
+                if ( fortnite::settings::world::battlemode_toggle || !fortnite::settings::world::enabled || !fortnite::settings::world::cars ) {
+                    return;
+                }
+                std::vector<processed_actor_data> bulk_data;
+                {
+                    std::lock_guard<std::mutex> lock( g_bulk_mutex );
+                    bulk_data = g_shared_bulk_data;
+                }
+
+                out.clear( );
+                for ( const auto& data : bulk_data )
+                {
+                    if ( data.lifespan_after_death != 0.5f ) continue;
+
+                    vehicle_data vehicle {};
+                    vehicle.current = data.actor;
+                    vehicle.root_component = data.root_component;
+                    vehicle.mesh = data.vehicle_mesh;
+                    vehicle.critical_health = data.vehicle_critical_health;
+
+                    out.emplace_back( std::move( vehicle ) );
+                }
+                } , 150000 ); // 150ms - faster for stable vehicle ESP
+
+            weakspot_cache.start( [ ]( std::vector<weakspot_data>& out ) {
+                if ( fortnite::settings::world::battlemode_toggle || !fortnite::settings::world::enabled || !fortnite::settings::world::weakspots ) {
+                    return;
+                }
+                std::vector<processed_actor_data> bulk_data;
+                {
+                    std::lock_guard<std::mutex> lock( g_bulk_mutex );
+                    bulk_data = g_shared_bulk_data;
+                }
+
+                out.clear( );
+                for ( const auto& data : bulk_data )
+                {
+                    if ( data.max_level != 7 ) continue;
+
+                    const auto weakspot_actor = data.actor;
+                    const uint8_t flags = communcations::read<uint8_t>( weakspot_actor + fortnite::offsets::b_active );
+                    const bool b_hit = flags & ( 1 << 0 );
+                    const bool b_active = flags & ( 1 << 2 );
+                    if ( b_hit || !b_active ) continue;
+
+                    weakspot_data weakspot {};
+                    weakspot.current = data.actor;
+                    weakspot.root_component = data.root_component;
+                    out.emplace_back( std::move( weakspot ) );
+                }
+                } , 50000 ); // 50ms - faster for responsive weakspot ESP
+        }
+
+        void stop( )
+        {
+            master_cache.stop( );
+            actor_cache.stop( );
+            pickup_cache.stop( );
+            container_cache.stop( );
+            projectile_cache.stop( );
+            vehicle_cache.stop( );
+            weakspot_cache.stop( );
+            supply_drop_cache.stop( );
+            building_cache.stop( );
+        }
+
+        std::shared_ptr<const std::vector<actor_data>> get_a( ) { return actor_cache.get( ); }
+        std::shared_ptr<const std::vector<pickup_data>> get_p( ) { return pickup_cache.get( ); }
+        std::shared_ptr<const std::vector<container_data>> get_containers( ) { return container_cache.get( ); }
+        std::shared_ptr<const std::vector<projectile_data>> get_projectiles( ) { return projectile_cache.get( ); }
+        std::shared_ptr<const std::vector<vehicle_data>> get_vehicles( ) { return vehicle_cache.get( ); }
+        std::shared_ptr<const std::vector<weakspot_data>> get_weakspots( ) { return weakspot_cache.get( ); }
+        std::shared_ptr<const std::vector<supply_drop_data>> get_supply_drops( ) { return supply_drop_cache.get( ); }
+        std::shared_ptr<const std::vector<building_data>> get_buildings( ) { return building_cache.get( ); }
+    }
+}

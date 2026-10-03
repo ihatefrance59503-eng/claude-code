@@ -1,0 +1,83 @@
+// this source is from NewReality a discord server with 1500+ sources: discord.gg/newreality
+#pragma once
+#include <unordered_map>
+#include <string>      
+#include <windows.h>
+#include <tlhelp32.h>
+#include <iostream>
+
+inline HWND bWindowHandle;
+typedef struct _BA
+{
+	INT32 Security;
+	INT32 ProcessID;
+	ULONGLONG* Address;
+} BA , * PBA;
+typedef struct _ReadWrite
+{
+	INT32 Security;
+	INT32 ProcessID;
+	ULONGLONG Address;
+	ULONGLONG Buffer;
+	ULONGLONG Size;
+	BOOLEAN Write;
+	BOOLEAN EAC;
+} RW , * PRW;
+
+typedef struct _DTB
+{
+	INT32 Security;
+	INT32 ProcessID;
+	bool* Operation;
+} DTB , * DTBL;
+typedef struct MOUSE_INIT
+{
+	INT32 Security;
+	INT32 Reserved;       // placeholder for alignment
+	ULONGLONG DeviceHandle;
+	ULONGLONG Callback;
+	BOOLEAN Initialized;
+	BOOLEAN EAC;          // optional / placeholder
+} MOUSE_INIT , * MOUSE_INIT_;
+
+typedef struct MOUSE_MOVE
+{
+	INT32 X;
+	INT32 Y;
+	UINT16 ButtonFlags;
+	BOOLEAN EAC;          // optional / placeholder
+	ULONGLONG Reserved1;  // alignment
+	ULONGLONG Reserved2;  // alignment
+} MOUSE_MOVE , * MOUSE_MOVE_;
+namespace fortnite {
+	namespace communcations
+	{
+		inline HANDLE driver_handle = INVALID_HANDLE_VALUE;
+		inline int process_id = 0;
+		inline uintptr_t base_address;
+		bool find_driver( );
+		INT32 get_process_id( LPCTSTR process_name );
+		uintptr_t get_base( );
+		bool read_memory( PVOID address , PVOID buffer , DWORD size );
+		bool write_memory( PVOID address , PVOID buffer , DWORD size );
+		bool get_cr3( );
+
+		template<typename T>
+		inline T read( uintptr_t address )
+		{
+			T buffer {};
+			read_memory( ( PVOID ) address , &buffer , sizeof( T ) );
+			return buffer;
+		}
+		template<typename T>
+		inline T write( uintptr_t address , const T& data )
+		{
+			T buffer {};
+			write_memory( reinterpret_cast< PVOID >( address ) , const_cast< T* >( &data ) , sizeof( T ) );
+			return buffer;
+		}
+
+	}
+
+}
+

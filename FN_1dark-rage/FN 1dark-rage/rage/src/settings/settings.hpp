@@ -1,0 +1,222 @@
+// this source is from NewReality a discord server with 1500+ sources: discord.gg/newreality
+#pragma once
+
+namespace fortnite::settings {
+    namespace players {
+        inline bool enabled = true;
+        inline bool box = true;
+        inline float box_thickness = 2.0f;
+        inline bool platform = true;
+        inline int box_type = 0;
+        inline bool visible_check = 0;
+        inline float visible_color[4] = { 0.f, 1.f, 0.f, 1.f };
+        inline float invisible_color[4] = { 1.f, 0.f, 0.f, 1.f };
+        inline float movement_color [ 4 ] = { 1.f, 1.f, 1.f, 1.f };
+        inline bool movement_tracers = false;
+        inline bool self_movement_tracers = false;
+        inline float movement_thickness = 2.0f;
+        inline float movement_fade = 2.0f;
+        inline bool oof_arrows = true;
+
+        inline bool skeleton = true;
+        inline bool name = true;
+        inline bool weapon = true;
+        inline bool squad_size = true;
+        inline bool rice_hat = false;
+        inline bool self_rice_hat = false;
+
+        inline float rice_hat_color [ 4 ] = { 0.f, 1.f, 0.f, 1.f };
+
+        inline bool ammo_count = true;
+        inline bool distance = true;
+        inline bool team_id = true;
+        inline bool health_bar = false;
+        inline bool shield_bar = false;
+        inline bool snaplines = false;
+        inline int snaplines_start = 0; 
+        inline bool rank = true;
+        inline bool velocity = true;
+        inline bool prediction = true;
+        inline int text_type = 1; 
+    }
+    namespace world {
+        inline bool weapon_type = 0;
+        inline bool enabled = true;
+        inline bool pickups = true;
+        inline bool cars = true;
+        inline bool containers = true;
+        inline bool projectiles = true;
+        inline bool weakspots = true;
+        inline bool supply_drops = true;
+        inline bool buildings = true;
+        inline int pickup_box_type = 0; 
+        inline int min_rarity_show = 0;   
+        inline bool pickups_radar = 0; 
+        inline int containers_box_type = 1;   
+        inline bool container_type = 0;   
+        inline int car_box_type = 0;   
+        inline int battlemode = 0;
+        inline bool battlemode_toggle = 0;
+        inline bool show_health = 0;   
+        inline int max_distance_pickups = 200;
+        inline int max_distance_containers = 100;
+        inline int max_distance_cars = 100;
+        inline int max_distance_weakspots = 30;
+        inline int max_distance_master = 15;
+
+    }
+
+    namespace misc {
+        inline bool vsync = false;
+        inline int fps_limit = 6; 
+        inline int font_selection = 0;
+    }
+    namespace exploits {
+        inline bool player_size = false;
+        inline float player_size_value = 2.0f;
+    }
+    namespace fov {
+        inline bool enabled = false;
+        inline float radius = 200.0f;
+        inline float color[4] = { 1.f, 1.f, 1.f, 0.6f };
+        inline bool show_text = false;
+        inline int segments = 64;
+    }
+    namespace radar {
+        inline bool enabled = true;
+
+        inline ImVec2 position = ImVec2( 200 , 200 );
+
+        inline bool movable = false;
+
+        inline float size = 100.0f;     
+        inline float range = 2000.0f; 
+
+        inline bool show_fov = true;
+        inline bool show_grid = true;
+
+        inline bool show_distance = true;
+
+        inline bool color_by_team = true;
+        inline bool color_by_visibility = true;
+
+        inline float friendly_color [ 4 ] = { 0, 1, 0, 1 };
+        inline float enemy_color [ 4 ] = { 1, 0, 0, 1 };
+        inline float visible_color [ 4 ] = { 1, 1, 1, 1 };
+        inline float hidden_color [ 4 ] = { 1, 1, 1, 0.5f };
+
+        inline float opacity = 150.0f;
+    }
+    namespace trigger {
+        inline bool enabled = true;
+        inline bool shotgun_only = false;      
+        inline int randomness_factor = 10;     
+        inline int trigger_delay = 50;         
+        inline int click_randomness = 25;      
+        inline int hotkey = VK_F1;
+    }
+    namespace weakspot {
+        inline bool show_weakspot = true;
+        inline bool aimbot = 1;
+        inline bool auto_hit = 1;
+        inline bool auto_takewall = false;
+        inline float smooth_x = 0.75;
+        inline float smooth_y = 0.75;
+        inline int fov_size = 200;
+        inline bool show_fov = 1;
+        inline bool basic_human = 0;
+        inline int hotkey = VK_F1;
+
+    }
+    namespace crosshair {
+        inline bool enabled = true;
+        inline float length = 15.f;
+        inline float thickness = 2.f;
+        inline float gap = 5.f;
+        inline float color [ 4 ] = { 0.f, 1.f, 0.f, 1.f };
+        inline bool dot = true;
+        inline float dot_size = 2.f;
+        inline bool dynamic = false;
+        inline float rotation = 0.f;
+        inline int style = 0; 
+    }
+
+
+    namespace aimbot {
+        inline bool aimbot = false;
+        inline bool weapon_configs = false;
+        inline bool outline = false;
+        inline int hotkey = VK_F1;
+        inline bool show_fov = false;
+        inline int fov_size = 200;
+        inline int segments = 200;
+        inline float smooth_x = 0.01f;
+        inline float smooth_y = 0.01f;
+        inline int targeting_mode = 0;
+        inline int aim_bone = 110; 
+        inline int fallback_bone = 0; 
+        inline bool closest_bone = false;
+        inline bool target_downed = false; 
+        inline bool target_invisible = false; 
+        inline bool target_teammates = false;
+        inline bool target_bots = true;
+        inline bool show_target_line = false; 
+        inline float target_line_color [ 4 ] = { 1.f, 0.f, 1.f, 1.f }; 
+        inline bool show_targeting_notification = true; 
+        inline bool disable_on_zero_ammo = true; 
+        inline bool disable_on_pickaxe = true; 
+        inline bool disable_on_build_mode = true; 
+        inline float max_distance = 5000.0f; 
+        inline float min_distance = 100.0f;
+        inline bool use_distance_scaling = true; 
+        inline int aim_curve = 0;
+        inline bool predict_movement = true; 
+        inline float prediction_strength = 0.5f; 
+
+        inline float deadzone = 1.0f;
+        inline bool acceleration = true; 
+        inline float acceleration_factor = 1.2f; 
+
+        inline bool enable_close_aim = true;
+        inline float close_aim_distance = 20.0f; 
+        inline float close_aim_multiplier = 1.5f; 
+        inline float close_aim_smooth_x = 0.85f; 
+        inline float close_aim_smooth_y = 0.85f; 
+
+        inline float shotgun_fov = 250.0f;
+        inline float shotgun_smooth_x = 0.85f;
+        inline float shotgun_smooth_y = 0.85f;
+
+        inline float rifle_fov = 150.0f;
+        inline float rifle_smooth_x = 0.75f;
+        inline float rifle_smooth_y = 0.75f;
+
+        inline float ar_fov = 160.0f;
+        inline float ar_smooth_x = 0.70f;
+        inline float ar_smooth_y = 0.70f;
+
+        inline float sniper_fov = 100.0f;
+        inline float sniper_smooth_x = 0.90f;
+        inline float sniper_smooth_y = 0.90f;
+
+        inline float muzzle_fov = 180.0f;
+        inline float muzzle_smooth_x = 0.65f;
+        inline float muzzle_smooth_y = 0.65f;
+
+        inline float grenade_fov = 120.0f;
+        inline float grenade_smooth_x = 0.80f;
+        inline float grenade_smooth_y = 0.80f;
+    }
+    namespace binds {
+        inline int pickaxe;
+        inline int wall;
+        inline int shotgun_slot;
+    }
+    namespace tracers {
+        inline bool enable = false;
+        inline float thickness = 2.0f;
+        inline float fade = 5.0f;
+        inline float color [ 4 ] = { 0, 1, 0, 1 };
+
+    }
+}

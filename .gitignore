@@ -1,0 +1,14 @@
+﻿*.obj
+*.pdb
+*.ipdb
+*.iobj
+*.ilk
+*.idb
+*.exe
+*.sys
+*.lib
+*.exp
+x64/
+builds/
+.vs/
+*.vcxproj.user

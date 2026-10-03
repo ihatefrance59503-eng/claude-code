@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="rage/rage.vcxproj" Id="e69905db-f927-4ad1-994f-08af94a743a5" />
+</Solution>
