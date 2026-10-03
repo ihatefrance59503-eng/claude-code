@@ -249,12 +249,28 @@ static inline uint64_t mba_dec(uint64_t x) {
 }
 
 static bool TryPlainPos(uint64_t actor, Vec3& out) {
-    uint32_t offsets[] = { 0x50, 0x60 };
-    for (int i = 0; i < 2; i++) {
-        Vec3 v = read<Vec3>(actor + offsets[i]);
+    // +0xA0 is the confirmed position offset on the current build (probe data Oct 2026)
+    // +0x50/0x60 kept as legacy fallback
+    uint32_t offsets[] = { 0xA0, 0xA8, 0xB0, 0x50, 0x60 };
+    for (uint32_t off : offsets) {
+        Vec3 v = read<Vec3>(actor + off);
         if (!ValidateWorldCoord(v)) continue;
         out = v;
         return true;
+    }
+    // UE4 actor: RootComponent pointer chain -> RelativeLocation
+    // actor+0x198 -> USceneComponent; component+0x128 -> world location
+    uint32_t rootOffs[] = { 0x198, 0x1A8 };
+    uint32_t locOffs[]  = { 0x128, 0x11C, 0x130, 0x140 };
+    for (uint32_t ro : rootOffs) {
+        uint64_t comp = read<uint64_t>(actor + ro);
+        if (!comp || !IsValidAddr(comp)) continue;
+        for (uint32_t lo : locOffs) {
+            Vec3 v = read<Vec3>(comp + lo);
+            if (!ValidateWorldCoord(v)) continue;
+            out = v;
+            return true;
+        }
     }
     return false;
 }
@@ -698,10 +714,20 @@ static void PollSyncBuffer(int W, int H, int maxD) {
                 if (renderDbg) {
                     printf("[RENDER-SKIP] ea=0x%llX COORD pos=(%.2f,%.2f,%.2f)\n", (unsigned long long)ea, draw_pos.x, draw_pos.y, draw_pos.z);
                     // probe raw floats around common position offsets to help locate the right one
-                    for (uint32_t off : {0x50u, 0x60u, 0x70u, 0x80u, 0x90u, 0xA0u, 0x100u, 0x110u, 0x120u, 0x128u, 0x130u, 0x140u}) {
+                    for (uint32_t off : {0x50u, 0x60u, 0x70u, 0x80u, 0x90u, 0xA0u, 0xA8u, 0xB0u, 0x100u, 0x110u, 0x120u, 0x128u, 0x130u, 0x140u}) {
                         Vec3 v = read<Vec3>(ea + off);
                         if (std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z)&&(fabsf(v.x)>2.f||fabsf(v.y)>2.f||fabsf(v.z)>2.f)&&fabsf(v.x)<50000.f&&fabsf(v.y)<50000.f&&fabsf(v.z)<50000.f)
                             printf("[POS-PROBE] ea=0x%llX off=+0x%X (%.1f,%.1f,%.1f)\n", (unsigned long long)ea, off, v.x, v.y, v.z);
+                    }
+                    // also follow RootComponent pointer chain
+                    for (uint32_t ro : {0x198u, 0x1A8u}) {
+                        uint64_t comp = read<uint64_t>(ea + ro);
+                        if (!comp || !IsValidAddr(comp)) continue;
+                        for (uint32_t lo : {0x11Cu, 0x128u, 0x130u, 0x140u, 0x150u}) {
+                            Vec3 v = read<Vec3>(comp + lo);
+                            if (std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z)&&(fabsf(v.x)>2.f||fabsf(v.y)>2.f||fabsf(v.z)>2.f)&&fabsf(v.x)<50000.f&&fabsf(v.y)<50000.f&&fabsf(v.z)<50000.f)
+                                printf("[POS-PROBE] ea=0x%llX root+0x%X comp+0x%X (%.1f,%.1f,%.1f)\n", (unsigned long long)ea, ro, lo, v.x, v.y, v.z);
+                        }
                     }
                 }
                 continue;
