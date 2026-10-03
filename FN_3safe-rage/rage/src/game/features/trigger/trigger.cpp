@@ -1,5 +1,6 @@
-// this source is from NewReality a discord server with 1500+ sources: discord.gg/newreality
+// safe-rage: trigger routed through makcu, no keybd_event / SendInput.
 #include "trigger.hpp"
+#include "../../../../dependenices/mouse/mouse.hpp"
 #include <map>
 #include <unordered_set>
 
@@ -48,32 +49,8 @@ void fortnite::trigger::tick( )
     }
 
     last_fire = now;
-    std::cout << "SHOTTING";
-    keybd_event( VK_LBUTTON , 0 , 0 , 0 );
-    Sleep( 3 );
-    keybd_event( VK_LBUTTON , 0 , KEYEVENTF_KEYUP , 0 );
-    if ( fortnite::settings::trigger::click_randomness > 0 ) {
-        static bool waiting_for_up = false;
-        static auto click_start = std::chrono::steady_clock::now( );
-        static int current_delay = 0;
-
-        if ( !waiting_for_up ) {
-            waiting_for_up = true;
-            current_delay = rand( ) % ( fortnite::settings::trigger::click_randomness + 1 );
-            click_start = now;
-        }
-        else {
-            if ( std::chrono::duration_cast< std::chrono::milliseconds >( now - click_start ).count( ) >= current_delay ) {
-                keybd_event( VK_RBUTTON , 0 , 0 , 0 );
-                keybd_event( VK_RBUTTON , 0 , KEYEVENTF_KEYUP , 0 );
-                waiting_for_up = false;
-            }
-        }
-    }
-    else {
-        keybd_event( VK_RBUTTON , 0 , 0 , 0 );
-        keybd_event( VK_RBUTTON , 0 , KEYEVENTF_KEYUP , 0 );
-    }
+    // safe-rage: hardware left click via makcu, not keybd_event.
+    fortnite::mouse::click( 3 );
 }
 float fortnite::trigger::calculate_fov_distance( uemath::fvector2d screen_pos )
 {

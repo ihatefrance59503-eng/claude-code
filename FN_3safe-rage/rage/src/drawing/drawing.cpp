@@ -1212,22 +1212,12 @@ namespace fortnite::drawing
 
             if ( was_breaking )
             {
-                if ( fortnite::settings::weakspot::auto_takewall ) {
-                    widgets->notify.add( "weakspot ended" , "auto break finished" , notify_info );
-                    keybd_event( fortnite::settings::binds::wall , 0 , 0 , 0 );
-                    Sleep( 1 );
-                    keybd_event( fortnite::settings::binds::wall , 0 , KEYEVENTF_KEYUP , 0 );
-                    Sleep( 10 );
-                    keybd_event( VK_LBUTTON , 0 , 0 , 0 );
-                    Sleep( 1 );
-                    keybd_event( VK_LBUTTON , 0 , KEYEVENTF_KEYUP , 0 );
-                    Sleep( 1 );
-
-                    keybd_event( fortnite::settings::binds::shotgun_slot , 0 , 0 , 0 );
-
-                    keybd_event( fortnite::settings::binds::shotgun_slot , 0 , KEYEVENTF_KEYUP , 0 );
-                    widgets->notify.add( "wall placed" , "auto take wall finsihed" , notify_info );
-                }
+                // safe-rage: auto-takewall exploit removed. humanly impossible
+                // input timing + rapid slot swap is a loud detection pattern.
+                // if you want this feature back, drive it through makcu's
+                // keyboard HID path (km.press / km.release) with human-realistic
+                // delays, not keybd_event bursts.
+                ( void ) fortnite::settings::weakspot::auto_takewall;
                 was_breaking = false;
             }
 
@@ -1321,35 +1311,13 @@ namespace fortnite::drawing
                 // safe-rage: hardware mouse via makcu, no rotation writes.
                 fortnite::mouse::move( ( int ) move_x , ( int ) move_y );
             }
-            if ( fortnite::settings::weakspot::auto_hit )
-            {
-                float crosshair_distance = std::sqrt( ( delta_x * delta_x ) + ( delta_y * delta_y ) );
-
-                bool already_holding_pickaxe = check_holding_pickaxe( );
-
-                if ( !is_on_pickaxe && !already_holding_pickaxe )
-                {
-                    std::cout << "sending\n";
-                    keybd_event( fortnite::settings::binds::pickaxe , 0 , 0 , 0 );
-                    keybd_event( fortnite::settings::binds::pickaxe , 0 , KEYEVENTF_KEYUP , 0 );
-                    is_on_pickaxe = true;
-                    pickaxe_switch_time = GetTickCount64( );
-                    last_swing = 0;
-                }
-
-                ULONGLONG now = GetTickCount64( );
-                already_holding_pickaxe = check_holding_pickaxe( );
-
-                int switch_delay = already_holding_pickaxe ? 0 : 200;
-
-                if ( ( now - pickaxe_switch_time >= switch_delay ) &&
-                    crosshair_distance <= 30.0f &&
-                    ( now - last_swing > 450 ) )
-                {
-                    keybd_event( VK_LBUTTON , 0 , 0 , 0 );
-                    last_swing = now;
-                }
-            }
+            // safe-rage: auto-hit (pickaxe auto-swap + swing) removed.
+            // same reason as auto-takewall. keep the weakspot visual, drop
+            // the automation.
+            ( void ) fortnite::settings::weakspot::auto_hit;
+            ( void ) is_on_pickaxe;
+            ( void ) pickaxe_switch_time;
+            ( void ) last_swing;
         }
         else
         {
