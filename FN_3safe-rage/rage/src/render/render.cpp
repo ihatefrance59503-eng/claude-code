@@ -1,4 +1,6 @@
-// this source is from NewReality a discord server with 1500+ sources: discord.gg/newreality
+// safe-rage: overlay host is pluggable. tries icecream first, discord
+// overlay second, falls back to a self-owned transparent window. all
+// are additionally marked WDA_EXCLUDEFROMCAPTURE where the OS allows.
 #include "render.hpp"
 #include "../settings/settings.hpp"
 #include <chrono>
@@ -119,16 +121,86 @@ bool fortnite::render::set_up( HWND window )
 
     ImGui_ImplWin32_Init( window );
     ImGui_ImplDX11_Init( g_pd3dDevice , g_pd3dDeviceContext );
-  
+
     slate->initialize( g_pd3dDevice , g_pd3dDeviceContext , g_pSwapChain );
+
+    // safe-rage: ask the OS to exclude this window from any BitBlt /
+    // PrintWindow / DWM-thumbnail screenshot. succeeds for windows we
+    // own; may fail silently for foreign hosts (discord/icecream) — no
+    // harm if it does, EAC's game-HWND screenshot already won't see
+    // them. requires Win10 2004+.
+    SetWindowDisplayAffinity( window , WDA_EXCLUDEFROMCAPTURE );
 
     return true;
 }
 
+static LRESULT CALLBACK safe_rage_overlay_wndproc( HWND hwnd , UINT msg , WPARAM wp , LPARAM lp )
+{
+    switch ( msg )
+    {
+    case WM_DESTROY:
+        PostQuitMessage( 0 );
+        return 0;
+    }
+    return DefWindowProcA( hwnd , msg , wp , lp );
+}
+
+static HWND safe_rage_create_own_overlay( )
+{
+    static bool class_registered = false;
+    HINSTANCE hinst = GetModuleHandleA( nullptr );
+
+    if ( !class_registered )
+    {
+        WNDCLASSEXA wc = { 0 };
+        wc.cbSize = sizeof( wc );
+        wc.lpfnWndProc = safe_rage_overlay_wndproc;
+        wc.hInstance = hinst;
+        wc.hCursor = LoadCursorA( nullptr , IDC_ARROW );
+        wc.lpszClassName = "nv_overlay_class";
+        RegisterClassExA( &wc );
+        class_registered = true;
+    }
+
+    HWND hwnd = CreateWindowExA(
+        WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOPMOST | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE ,
+        "nv_overlay_class" , "nv_overlay" ,
+        WS_POPUP ,
+        0 , 0 ,
+        GetSystemMetrics( SM_CXSCREEN ) , GetSystemMetrics( SM_CYSCREEN ) ,
+        nullptr , nullptr , hinst , nullptr
+    );
+
+    if ( !hwnd )
+        return nullptr;
+
+    // Fully transparent background using color key black. DX11 clears
+    // to RGBA(0,0,0,0) so only drawn pixels are visible.
+    SetLayeredWindowAttributes( hwnd , 0 , 0 , LWA_COLORKEY );
+    ShowWindow( hwnd , SW_SHOW );
+    UpdateWindow( hwnd );
+    return hwnd;
+}
+
 HWND fortnite::render::find_window( )
 {
+    // Strategy 1: Icecream Screen Recorder (preferred — social cover +
+    // trusted process identity on the overlay HWND).
+    window = FindWindowA( "Qt5151QWindowIcon" , "Icecream Screen Recorder" );
+    if ( window )
+        return window;
+
+    // Strategy 2: Discord overlay (fallback — needs discord running
+    // with in-game overlay enabled on fortnite).
     window = FindWindowA( encrypt( "Chrome_WidgetWin_1" ) , encrypt( "Discord Overlay" ) );
-   return window;
+    if ( window )
+        return window;
+
+    // Strategy 3: own window — spawn a transparent top-level overlay
+    // owned by this process. no external app needed. WDA_EXCLUDEFROMCAPTURE
+    // is set in set_up() and succeeds on our own window.
+    window = safe_rage_create_own_overlay( );
+    return window;
 }
 
 void fortnite::render::tick( )
