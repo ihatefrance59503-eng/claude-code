@@ -5,6 +5,16 @@
 #include <algorithm>
 #include <cmath>
 
+// local aimbot state (dark-rage's aimbot.hpp doesn't declare these;
+// exploits-rage's did, but we're on dark-rage now).
+namespace {
+    uint64_t s_closet_pawn       = 0;
+    float    s_closest_distance  = FLT_MAX;
+    inline bool addr_looks_valid(uint64_t p) {
+        return p > 0x1000ULL && p < 0x7FFFFFFFFFFFULL;
+    }
+}
+
 // ----------------------------------------------------------------------
 // SAFE-EXT AIMBOT
 //
@@ -182,12 +192,12 @@ void fortnite::aimbot::tick() {
         return;
 
     auto local_pawn = fortnite::entity::local_pawn;
-    if (!local_pawn || !fortnite::communcations::is_valid(local_pawn))
+    if (!local_pawn || !addr_looks_valid(local_pawn))
         return;
 
     auto current_weapon = fortnite::communcations::read<uint64_t>(
         local_pawn + fortnite::offsets::current_weapon);
-    if (!current_weapon || !fortnite::communcations::is_valid(current_weapon))
+    if (!current_weapon || !addr_looks_valid(current_weapon))
         return;
 
     auto weapon_type = fortnite::communcations::read<EFortWeaponCoreAnimation>(
@@ -241,9 +251,9 @@ void fortnite::aimbot::tick() {
 
         float dist_m = fortnite::engine::camera::location.distance(location) / 100.0f;
 
-        if (dist_m < fortnite::aimbot::closest_distance) {
-            fortnite::aimbot::closest_distance = dist_m;
-            fortnite::aimbot::closet_pawn      = actor.current;
+        if (dist_m < s_closest_distance) {
+            s_closest_distance = dist_m;
+            s_closet_pawn      = actor.current;
         }
 
         if (dist_m < fortnite::settings::aimbot::min_distance) continue;
