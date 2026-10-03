@@ -33,12 +33,13 @@ namespace creation {
 
 		imports::RtlInitUnicodeString_f(&globals::DeviceN, encrypt(L"\\Device\\WinKernelInterface"));
 		imports::RtlInitUnicodeString_f(&globals::DosL, encrypt(L"\\DosDevices\\WinKernelInterface"));
-		clean::clear_hash_bucket(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
-		clean::CleanMmu(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
-		clean::clearCache(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")), 1698136146);
+		// KEVLAR-patch: skip stealth cleans (scan unmapped kernel space, infinite loop in emu)
+		// clean::clear_hash_bucket(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
+		// clean::CleanMmu(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")));
+		// clean::clearCache(UNICODE_STRING(RTL_CONSTANT_STRING(L"nigctl.sys")), 1698136146);
 		imports::IoCreateDevice(drv_obj, 0, &globals::DeviceN, FILE_DEVICE_UNKNOWN, FILE_DEVICE_SECURE_OPEN, FALSE, &device_obj);
 		imports::IoCreateSymbolicLink(&globals::DosL, &globals::DeviceN);
-		clean::clean_extras(drv_obj);
+		// clean::clean_extras(drv_obj);
 		drv_obj->DriverStart = NULL;
 		drv_obj->DriverSize = 0;
 		drv_obj->DriverInit = NULL;
